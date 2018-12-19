@@ -1,5 +1,6 @@
 {
     "additional_info": "Additional Munki Info",
+    "errors": "Munki Errors",
     "errors_and_warnings": "Errors and Warnings",
     "managedsoftware": "Managed Software",
     "manifest": {
@@ -16,5 +17,6 @@
     "panel_title": "Munki statistics this week",
     "report": "Munki Report",
     "run_type": "Run Type",
-    "version": "Munki Version"
+    "version": "Munki Version",
+    "warnings": "Munki Warnings"
 }

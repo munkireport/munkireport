@@ -94,4 +94,34 @@ class Munkireport_controller extends Module_controller
         $obj = new View();
         $obj->view('json', array('msg' => $out));
     }
+    
+    public function get_errors($max = 5)
+    {
+        $out = array();
+        if (! $this->authorized()) {
+            $out['error'] = 'Not authorized';
+        } else {
+            $mr = new Munkireport_model;
+            $out = $mr->getErrors($max);
+        }
+        
+        $obj = new View();
+        $obj->view('json', ['msg' => $out]);
+    }
+    
+    public function get_warnings($max = 5)
+    {
+        $out = array();
+        if (! $this->authorized()) {
+            $out['error'] = 'Not authorized';
+        } else {
+            $mr = new Munkireport_model;
+            $out = $mr->getWarnings($max);
+        }
+        
+        $obj = new View();
+        $obj->view('json', ['msg' => $out]);
+    }
+
+
 } // END class default_module

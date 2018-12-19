@@ -33,6 +33,14 @@
 
   </div> <!-- /row -->
 
+	<div class="row">
+
+     <?php $widget->view($this, 'munki_errors'); ?>
+     
+     <?php $widget->view($this, 'munki_warnings'); ?>
+
+
+   </div> <!-- /row -->
 
 
 </div>  <!-- /container -->

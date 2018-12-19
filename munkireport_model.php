@@ -89,6 +89,38 @@ class Munkireport_model extends \Model
 
         return current($this->query($sql));
     }
+    
+    public function getErrors($max = 5)
+    {
+      $sql = sprintf(
+        "SELECT error_json, COUNT(*) as count 
+         FROM munkireport
+         LEFT JOIN reportdata USING (serial_number)
+         ".get_machine_group_filter()."
+         AND errors > 0
+         GROUP BY error_json
+         ORDER BY count
+         DESC LIMIT %d", $max);
+      
+      return $this->query($sql);
+    }
+    
+    public function getWarnings($max = 5)
+    {
+      $sql = sprintf(
+        "SELECT warning_json, COUNT(*) as count 
+         FROM munkireport
+         LEFT JOIN reportdata USING (serial_number)
+         ".get_machine_group_filter()."
+         AND warnings > 0
+         GROUP BY warning_json
+         ORDER BY count
+         DESC LIMIT %d", $max);
+      
+      return $this->query($sql);
+    }
+
+
 
 
     public function process($plist)
