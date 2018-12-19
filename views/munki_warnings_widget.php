@@ -27,12 +27,12 @@ $(document).on('appUpdate', function(){
 		var scrollBox = $('#munkireport-warnings-widget .scroll-box').empty();
 
 		$.each(data, function(index, obj){
-      error_json = JSON.parse(obj.error_json)
+      warning_json = JSON.parse(obj.warning_json)
 			scrollBox
 				.append($('<a>')
 					.addClass('list-group-item')
 					.attr('href', appUrl + '/show/listing/munkireport/munki#warnings')
-					.append(error_json)
+					.append(warning_json)
 					.append($('<span>')
 						.addClass('pull-right')
 						.text(obj.count)))
