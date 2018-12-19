@@ -22,7 +22,7 @@
 <script>
 $(document).on('appUpdate', function(){
 
-	$.getJSON( appUrl + '/module/munkireport/get_warnings/5', function( data ) {
+	$.getJSON( appUrl + '/module/munkireport/get_warnings/10', function( data ) {
 
 		var scrollBox = $('#munkireport-warnings-widget .scroll-box').empty();
 
@@ -32,10 +32,11 @@ $(document).on('appUpdate', function(){
 				.append($('<a>')
 					.addClass('list-group-item')
 					.attr('href', appUrl + '/show/listing/munkireport/munki#warnings')
-					.append(warning_json)
 					.append($('<span>')
-						.addClass('pull-right')
-						.text(obj.count)))
+						.addClass('badge pull-right')
+						.text(obj.count))
+					.append(warning_json)
+					)
 
 		});
 

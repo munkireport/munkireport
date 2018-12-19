@@ -22,7 +22,7 @@
 <script>
 $(document).on('appUpdate', function(){
 
-	$.getJSON( appUrl + '/module/munkireport/get_errors/5', function( data ) {
+	$.getJSON( appUrl + '/module/munkireport/get_errors/10', function( data ) {
 
 		var scrollBox = $('#munkireport-errors-widget .scroll-box').empty();
 
@@ -32,10 +32,11 @@ $(document).on('appUpdate', function(){
 				.append($('<a>')
 					.addClass('list-group-item')
 					.attr('href', appUrl + '/show/listing/munkireport/munki#errors')
-					.append(error_json)
-					.append($('<span>')
+          .append($('<span>')
 						.addClass('badge pull-right')
-						.text(obj.count)))
+						.text(obj.count))
+					.append(error_json)
+					)
 
 		});
 
