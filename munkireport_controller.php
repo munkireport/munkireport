@@ -15,6 +15,9 @@ class Munkireport_controller extends Module_controller
         // Store module path
         $this->module_path = dirname(__FILE__) .'/';
         $this->view_path = $this->module_path . 'views/';
+        if ($this->authorized()) {
+            $this->connectDB();
+        }
     }
 
     /**
@@ -38,9 +41,26 @@ class Munkireport_controller extends Module_controller
         if (! $this->authorized()) {
             $obj->view('json', array('msg' => 'Not authorized'));
         }
+        $columns = [
+          'runtype',
+          'version',
+          'errors',
+          'warnings',
+          'manifestname',
+          'error_json',
+          'warning_json',
+          'starttime',
+          'endtime'
+        ];
 
-        $model = new Munkireport_model($serial_number);
-        $obj->view('json', array('msg' => $model->rs));
+        $out = Munkireport_model::select($columns)
+            ->whereSerialNumber($serial_number)
+            ->filter()
+            ->limit(1)
+            ->first()
+            ->toArray();
+
+        $obj->view('json', array('msg' => $out));
     }
     
     /**
@@ -54,8 +74,14 @@ class Munkireport_controller extends Module_controller
         if (! $this->authorized()) {
             $obj->view('json', array('msg' => array('error' => 'Not authorized')));
         } else {
-            $mrm = new Munkireport_model();
-            $obj->view('json', array('msg' => $mrm->get_manifest_stats()));
+          $out = Munkireport_model::selectRaw('count(1) AS count, manifestname')
+            ->filter()
+            ->groupBy('manifestname')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->toArray();
+
+            $obj->view('json', array('msg' => $out));
         }
     }
     
@@ -70,8 +96,15 @@ class Munkireport_controller extends Module_controller
         if (! $this->authorized()) {
             $obj->view('json', array('msg' => array('error' => 'Not authorized')));
         } else {
-            $mrm = new Munkireport_model();
-            $obj->view('json', array('msg' => $mrm->get_versions()));
+            // $mrm = new Munkireport_model();
+            $out = Munkireport_model::selectRaw('version, count(*) AS count')
+              ->filter()
+              ->groupBy('version')
+              ->orderBy('count', 'desc')
+              ->get()
+              ->toArray();
+
+            $obj->view('json', ['msg' => $out]);
         }
     }
     
@@ -87,10 +120,13 @@ class Munkireport_controller extends Module_controller
         if (! $this->authorized()) {
             $out['error'] = 'Not authorized';
         } else {
-            $mr = new Munkireport_model;
-            $out = $mr->get_stats($hours);
+          $timestamp = date('Y-m-d H:i:s', time() - 60 * 60 * (int) $hours);
+          $out = Munkireport_model::selectRaw('sum(errors > 0) as error, sum(warnings > 0) as warning')
+            ->filter()
+            ->where('munkireport.timestamp', '>', $timestamp)
+            ->first()
+            ->toArray();
         }
-        
         $obj = new View();
         $obj->view('json', array('msg' => $out));
     }
@@ -101,10 +137,15 @@ class Munkireport_controller extends Module_controller
         if (! $this->authorized()) {
             $out['error'] = 'Not authorized';
         } else {
-            $mr = new Munkireport_model;
-            $out = $mr->getErrors($max);
+            $out = Munkireport_model::selectRaw('error_json, COUNT(*) as count')
+              ->where('errors', '>', 0)
+              ->filter()
+              ->groupBy('error_json')
+              ->orderBy('count', 'desc')
+              ->limit($max)
+              ->get()
+              ->toArray();
         }
-        
         $obj = new View();
         $obj->view('json', ['msg' => $out]);
     }
@@ -114,13 +155,19 @@ class Munkireport_controller extends Module_controller
         $out = array();
         if (! $this->authorized()) {
             $out['error'] = 'Not authorized';
-        } else {
-            $mr = new Munkireport_model;
-            $out = $mr->getWarnings($max);
-        }
-        
-        $obj = new View();
-        $obj->view('json', ['msg' => $out]);
+          } else {
+              $out = Munkireport_model::selectRaw('warning_json, COUNT(*) as count')
+                ->where('warnings', '>', 0)
+                ->filter()
+                ->groupBy('warning_json')
+                ->orderBy('count', 'desc')
+                ->limit($max)
+                ->get()
+                ->toArray();
+          }
+          
+          $obj = new View();
+          $obj->view('json', ['msg' => $out]);
     }
 
 
