@@ -76,29 +76,29 @@ class Munkireport_processor extends Processor
                     ]
                 )
             );
-        } elseif ($this->rs['errors'] > 1) {
+        } elseif ($modelData['errors'] > 1) {
             $this->store_event(
                 'danger',
                 'munki.error',
-                json_encode(['count' => $this->rs['errors']])
+                json_encode(['count' => $modelData['errors']])
             );
-        } elseif ($this->warnings == 1) {
+        } elseif ($modelData['warnings'] == 1) {
             $this->store_event(
                 'warning',
                 'munki.warning',
                 json_encode(
                     [
                         'warning' => truncate_string(
-                            json_decode($mylist['warning_json'])[0]
+                            json_decode($modelData['warning_json'])[0]
                         )
                     ]
                 )
             );
-        } elseif ($this->warnings > 1) {
+        } elseif ($modelData['warnings'] > 1) {
             $this->store_event(
                 'warning',
                 'munki.warning',
-                json_encode(['count' => $this->warnings])
+                json_encode(['count' => $modelData['warnings']])
             );
         } else {
             // Delete event
