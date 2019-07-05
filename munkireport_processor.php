@@ -74,7 +74,7 @@ class Munkireport_processor extends Processor
                             json_decode($modelData['error_json'])[0]
                         )
                     ]
-                ),
+                )
             );
         } elseif ($this->rs['errors'] > 1) {
             $this->store_event(
@@ -92,7 +92,7 @@ class Munkireport_processor extends Processor
                             json_decode($mylist['warning_json'])[0]
                         )
                     ]
-                ),
+                )
             );
         } elseif ($this->warnings > 1) {
             $this->store_event(
