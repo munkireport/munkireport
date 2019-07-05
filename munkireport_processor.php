@@ -10,7 +10,9 @@ class Munkireport_processor extends Processor
         $this->timestamp = date('Y-m-d H:i:s');
 
         if (! $plist) {
-            throw new Exception("Error Processing Request: No property list found", 1);
+            throw new Exception(
+                "Error Processing Request: No property list found", 1
+            );
         }
 
         $parser = new CFPropertyList();
@@ -34,7 +36,7 @@ class Munkireport_processor extends Processor
         }
 
         // Parse errors and warnings
-        $errorsWarnings = array('Errors' => 'error_json', 'Warnings' => 'warning_json');
+        $errorsWarnings = ['Errors' => 'error_json', 'Warnings' => 'warning_json'];
         foreach ($errorsWarnings as $key => $json) {
             $dbkey = strtolower($key);
             if (isset($mylist[$key]) && is_array($mylist[$key])) {
@@ -51,44 +53,52 @@ class Munkireport_processor extends Processor
         }
         
         $model = Munkireport_model::updateOrCreate(
-          ['serial_number' => $this->serial_number], $modelData
+            ['serial_number' => $this->serial_number], $modelData
         );
 
-        $this->storeEvents($modelData);
+        $this->_storeEvents($modelData);
 
         return $this;
     }
         
-    private function storeEvents($modelData)
+    private function _storeEvents($modelData)
     {
         // Store apropriate event:
         if ($modelData['errors'] == 1) {
             $this->store_event(
                 'danger',
                 'munki.error',
-                json_encode([
-                  'error' => truncate_string(json_decode($modelData['error_json'])[0])
-                ]),
+                json_encode(
+                    [
+                        'error' => truncate_string(
+                            json_decode($modelData['error_json'])[0]
+                        )
+                    ]
+                ),
             );
         } elseif ($this->rs['errors'] > 1) {
             $this->store_event(
                 'danger',
                 'munki.error',
-                json_encode(array('count' => $this->rs['errors']))
+                json_encode(['count' => $this->rs['errors']])
             );
         } elseif ($this->warnings == 1) {
             $this->store_event(
                 'warning',
                 'munki.warning',
-                json_encode([
-                  'warning' => truncate_string(json_decode($mylist['warning_json'])[0])
-                ]),
+                json_encode(
+                    [
+                        'warning' => truncate_string(
+                            json_decode($mylist['warning_json'])[0]
+                        )
+                    ]
+                ),
             );
         } elseif ($this->warnings > 1) {
             $this->store_event(
                 'warning',
                 'munki.warning',
-                json_encode(array('count' => $this->warnings))
+                json_encode(['count' => $this->warnings])
             );
         } else {
             // Delete event
