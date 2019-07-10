@@ -15,9 +15,6 @@ class Munkireport_controller extends Module_controller
         // Store module path
         $this->module_path = dirname(__FILE__) .'/';
         $this->view_path = $this->module_path . 'views/';
-        if ($this->authorized()) {
-            $this->connectDB();
-        }
     }
 
     /**
@@ -56,9 +53,7 @@ class Munkireport_controller extends Module_controller
         $out = Munkireport_model::select($columns)
             ->whereSerialNumber($serial_number)
             ->filter()
-            ->limit(1)
-            ->first()
-            ->toArray();
+            ->first();
 
         $obj->view('json', array('msg' => $out));
     }
