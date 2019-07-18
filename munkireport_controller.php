@@ -111,17 +111,12 @@ class Munkireport_controller extends Module_controller
      **/
     public function get_stats($hours = 24)
     {
-        $out = array();
-        if (! $this->authorized()) {
-            $out['error'] = 'Not authorized';
-        } else {
-          $timestamp = date('Y-m-d H:i:s', time() - 60 * 60 * (int) $hours);
-          $out = Munkireport_model::selectRaw('sum(errors > 0) as error, sum(warnings > 0) as warning')
+        $timestamp = date('Y-m-d H:i:s', time() - 60 * 60 * (int) $hours);
+        $out = Munkireport_model::selectRaw('sum(errors > 0) as error, sum(warnings > 0) as warning')
             ->filter()
             ->where('munkireport.timestamp', '>', $timestamp)
-            ->first()
-            ->toArray();
-        }
+            ->first();
+        
         $obj = new View();
         $obj->view('json', array('msg' => $out));
     }
