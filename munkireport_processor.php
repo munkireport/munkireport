@@ -7,8 +7,6 @@ class Munkireport_processor extends Processor
 {
     public function run($plist)
     {
-        $this->timestamp = date('Y-m-d H:i:s');
-
         if (! $plist) {
             throw new Exception(
                 "Error Processing Request: No property list found", 1
@@ -18,7 +16,10 @@ class Munkireport_processor extends Processor
         $parser = new CFPropertyList();
         $parser->parse($plist, CFPropertyList::FORMAT_XML);
         $mylist = $parser->toArray();
-        $modelData = ['serial_number' => $this->serial_number];
+        $modelData = [
+            'serial_number' => $this->serial_number,
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
 
         // Translate plist keys to db keys
         $translate = [
