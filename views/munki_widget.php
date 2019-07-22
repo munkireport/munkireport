@@ -13,11 +13,11 @@
 
 		<div class="panel-body text-center">
 
-		  <a href="#errors" tag="error" class="btn btn-danger disabled">
+		  <a href="#munkireport.errors" tag="error" class="btn btn-danger disabled">
 			  <span class="bigger-150"> 0 </span><br>
 			  <span class="count"></span>
 		  </a>
-		  <a href="#warnings" tag="warning" class="btn btn-warning disabled">
+		  <a href="#munkireport.warnings" tag="warning" class="btn btn-warning disabled">
 			  <span class="bigger-150"> 0 </span><br>
 			  <span class="count"></span>
 		  </a>

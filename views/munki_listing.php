@@ -30,8 +30,16 @@ $this->view('listings/default',
 		"formatter" => "timestampToMoment",
 	],
 	["column" => "munkireport.runtype", "i18n_header" => "munkireport.run_type",],
-	["column" => "munkireport.errors", "i18n_header" => "error_plural",],
-	["column" => "munkireport.warnings", "i18n_header" => "warning_plural",],
+	[
+		"column" => "munkireport.errors",
+		"i18n_header" => "error_plural",
+		"filter" => "columnNameFilter",
+	],
+	[
+		"column" => "munkireport.warnings",
+		"i18n_header" => "warning_plural",
+		"filter" => "columnNameFilter",
+	],
 	["column" => "munkireport.manifestname", "i18n_header" => "munkireport.manifest.name",],
   ]
 ]);

@@ -31,7 +31,7 @@ $(document).on('appUpdate', function(){
 			scrollBox
 				.append($('<a>')
 					.addClass('list-group-item')
-					.attr('href', appUrl + '/show/listing/munkireport/munki#errors')
+					.attr('href', appUrl + '/show/listing/munkireport/munki#munkireport.errors')
           .append($('<span>')
 						.addClass('badge pull-right')
 						.text(obj.count))
