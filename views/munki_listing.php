@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $this->view('listings/default',
 [
@@ -8,7 +8,7 @@ $this->view('listings/default',
       "column" => "machine.computer_name",
       "i18n_header" => "listing.computername",
       "formatter" => "clientDetail",
-      "tab_link" => "munki-tab",
+      "tab_link" => "munki",
     ],
     [
       "column" => "reportdata.serial_number",
