@@ -1,4 +1,4 @@
-#!/usr/local/munkireport/munkireport-python2
+#!/usr/local/munkireport/munkireport-python3
 """
 Filter the results of munki's MANAGED_INSTALL_REPORT.plist
 to these items: 'EndTime', 'StartTime', 'ManifestName', 'ManagedInstallVersion'
@@ -19,7 +19,7 @@ default_install_dir = '/Library/Managed Installs'
 managed_install_dir = CoreFoundation.CFPreferencesCopyAppValue(
     "ManagedInstallDir", "ManagedInstalls")
 
-# set the paths based on munki's configuration.
+# Set the paths based on munki's configuration.
 if managed_install_dir:
     MANAGED_INSTALL_REPORT = os.path.join(
         managed_install_dir, 'ManagedInstallReport.plist')
@@ -27,20 +27,12 @@ else:
     MANAGED_INSTALL_REPORT = os.path.join(
         default_install_dir, 'ManagedInstallReport.plist')
 
-# Don't skip manual check
-if len(sys.argv) > 1:
-    if sys.argv[1] == 'debug':
-        print '**** DEBUGGING ENABLED ****'
-        DEBUG = True
-        import pprint
-        PP = pprint.PrettyPrinter(indent=4)
-
-
 def dict_from_plist(path):
     """Returns a dict based on plist found in path"""
     try:
-        return plistlib.readPlist(path)
-    except Exception, message:
+        with open(path, 'rb') as fp:
+            return plistlib.load(fp)
+    except Exception as message:
         raise Exception("Error creating plist from output: %s" % message)
 
 def unique_list(seq):
@@ -50,14 +42,10 @@ def unique_list(seq):
 
 def main():
     """Main"""
-    # Create cache dir if it does not exist
-    cachedir = '%s/cache' % os.path.dirname(os.path.realpath(__file__))
-    if not os.path.exists(cachedir):
-        os.makedirs(cachedir)
 
     # Check if MANAGED_INSTALL_REPORT exists
     if not os.path.exists(MANAGED_INSTALL_REPORT):
-        print '%s is missing.' % MANAGED_INSTALL_REPORT
+        print('%s is missing.' % MANAGED_INSTALL_REPORT)
         install_report = {}
     else:
         install_report = dict_from_plist(MANAGED_INSTALL_REPORT)
@@ -88,7 +76,13 @@ def main():
         PP.pprint(report_list)
 
     # Write report to cache
-    plistlib.writePlist(report_list, "%s/munkireport.plist" % cachedir)
+    cachedir = '%s/cache' % os.path.dirname(os.path.realpath(__file__))
+    # plistlib.writePlist(report_list, "%s/munkireport.plist" % cachedir)
+    try:
+        plistlib.writePlist(report_list, "%s/munkireport.plist" % cachedir)
+    except:
+        with open("%s/munkireport.plist" % cachedir, 'wb') as fp:
+            plistlib.dump(report_list, fp, fmt=plistlib.FMT_XML)
 
 if __name__ == "__main__":
     main()

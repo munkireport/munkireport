@@ -15,9 +15,7 @@ class Munkireport_processor extends Processor
 
         // Parse plist or YAML data
         $trimmedData = ltrim($data);
-        if (strpos($trimmedData, '<?xml') === 0 ||
-            strpos($trimmedData, '<!DOCTYPE plist') !== false ||
-            strpos($trimmedData, '<plist') !== false) {
+        if (strpos($trimmedData, '<?xml') === 0 || strpos($trimmedData, '<!DOCTYPE plist') !== false || strpos($trimmedData, '<plist') !== false) {
             $parser = new CFPropertyList();
             $parser->parse($data, CFPropertyList::FORMAT_XML);
             $mylist = $parser->toArray();

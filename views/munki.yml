@@ -1,0 +1,14 @@
+row1:
+  munki:
+  munki_versions:
+  munkiinfo_munkiprotocol:
+row2:
+  get_failing:
+  pending:
+  manifests:
+row3:
+  pending_munki:
+  pending_apple:
+row4:
+  munki_errors:
+  munki_warnings:
