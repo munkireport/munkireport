@@ -5,17 +5,32 @@ use munkireport\processors\Processor;
 
 class Munkireport_processor extends Processor
 {
-    public function run($plist)
+    public function run($data)
     {
-        if (! $plist) {
+        if (! $data) {
             throw new Exception(
-                "Error Processing Request: No property list found", 1
+                "Error Processing Request: No data found", 1
             );
         }
 
-        $parser = new CFPropertyList();
-        $parser->parse($plist, CFPropertyList::FORMAT_XML);
-        $mylist = $parser->toArray();
+        // Parse plist or YAML data
+        $trimmedData = ltrim($data);
+        if (strpos($trimmedData, '<?xml') === 0 ||
+            strpos($trimmedData, '<!DOCTYPE plist') !== false ||
+            strpos($trimmedData, '<plist') !== false) {
+            $parser = new CFPropertyList();
+            $parser->parse($data, CFPropertyList::FORMAT_XML);
+            $mylist = $parser->toArray();
+        } else {
+            $mylist = \Symfony\Component\Yaml\Yaml::parse($data);
+        }
+
+        if (! $mylist) {
+            throw new Exception(
+                "Error Processing Request: Could not parse data", 1
+            );
+        }
+        
         $modelData = [
             'serial_number' => $this->serial_number,
             'timestamp' => date('Y-m-d H:i:s')
